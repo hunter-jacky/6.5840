@@ -24,7 +24,7 @@ type TaskRequest struct{}
 
 type TaskResponse struct {
 	Type TaskType
-	Uid  int
+	Uid  int // unique id
 	// map task
 	FileName string
 	NReduce  int

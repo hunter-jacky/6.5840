@@ -62,19 +62,16 @@ func (c *Coordinator) GetTask(_ *TaskRequest, response *TaskResponse) error {
 	case DonePhase:
 		response.Type = DoneTask
 	}
-	// fmt.Println("get task request from worker", response.Type, response.Uid, response.FileName, response.ReduceID)
 	return nil
 }
 
 func (c *Coordinator) ReportResult(report *ReportResult, _ *ReportResultResponse) error {
-	// fmt.Println("1. report result from worker", report.Uid, report.Type)
 	c.reportLock <- struct{}{}
 	ch, ok := c.report[report.Uid]
 	if !ok {
 		return nil
 	}
 	<-c.reportLock
-	// fmt.Println("2. report result from worker", report.Uid, report.Type)
 	switch report.Type {
 	case MapTask:
 		actionWithLock(c.reportLock, func() {
@@ -90,7 +87,6 @@ func (c *Coordinator) ReportResult(report *ReportResult, _ *ReportResultResponse
 
 func (c *Coordinator) AssignMapTask(response *TaskResponse) {
 	response.Type = MapTask
-	// fmt.Println("assign map task", atomic.LoadInt32(&c.mapTaskDone), c.fileNum)
 	if atomic.LoadInt32(&c.mapTaskDone) == c.fileNum {
 		actionWithLock(c.phaseLock, func() {
 			c.phase = ReducePhase
@@ -99,13 +95,6 @@ func (c *Coordinator) AssignMapTask(response *TaskResponse) {
 			close(c.mapTaskCh)
 		})
 		response.Type = WaitTask
-
-		// for i := 0; i < int(c.nReduce); i++ {
-		// 	c.intermediateLock <- struct{}{}
-		// 	fmt.Println("reduce id:", i, "len fileNames:", len(c.intermediate[i]))
-		// 	<-c.intermediateLock
-		// }
-
 		return
 	}
 
@@ -171,7 +160,6 @@ func (c *Coordinator) AssignReduceTask(response *TaskResponse) {
 		actionWithLock(c.intermediateLock, func() {
 			fileNames := make([]string, len(c.intermediate[reduceId]))
 			copy(fileNames, c.intermediate[reduceId])
-			// fmt.Println("assign reduce task", reduceId, "len fileNames:", len(fileNames), "intermediate:", len(c.intermediate[reduceId]))
 			response.ReduceFileNames = fileNames
 		})
 		reportCh := make(chan interface{}, 1)

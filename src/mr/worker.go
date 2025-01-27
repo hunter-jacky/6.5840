@@ -48,7 +48,6 @@ func Worker(mapf func(string, string) []KeyValue, reducef func(string, []string)
 		}
 		switch response.Type {
 		case MapTask:
-			// fmt.Printf("worker %d start map task %s\n", response.Uid, response.FileName)
 			resultFileList := doMap(mapf, response)
 			CallReportResult(&ReportResult{
 				Type:      MapTask,
@@ -56,16 +55,13 @@ func Worker(mapf func(string, string) []KeyValue, reducef func(string, []string)
 				FileName:  response.FileName,
 				MapResult: resultFileList,
 			})
-			// fmt.Printf("worker %d finish map task %s\n", response.Uid, response.FileName)
 		case ReduceTask:
-			// fmt.Printf("worker %d start reduce task %d\n", response.Uid, response.ReduceID)
 			doReduce(reducef, response)
 			CallReportResult(&ReportResult{
 				Type:     ReduceTask,
 				Uid:      response.Uid,
 				ReduceID: response.ReduceID,
 			})
-			// fmt.Printf("worker %d finish reduce task %d\n", response.Uid, response.ReduceID)
 		case DoneTask:
 			return
 		case WaitTask:
@@ -144,7 +140,6 @@ func doReduce(reducef func(string, []string) string, response *TaskResponse) {
 	if err = os.Rename(tmpFile.Name(), oname); err != nil {
 		log.Fatalf("rename tmp file failed: %v", err)
 	}
-	// fmt.Println("write to file:", response.ReduceID, len(intermediate), len(response.ReduceFileNames), nLine)
 }
 
 func storeIntermediate(intermediate []KeyValue, filename string) {
