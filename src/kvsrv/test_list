@@ -1,0 +1,11 @@
+GenericTest
+TestBasic2
+TestConcurrent2
+TestUnreliable2
+TestUnreliableOneKey2
+TestMemGet2
+TestMemPut2
+TestMemAppend2
+TestMemPutManyClients
+TestMemGetManyClients
+TestMemManyAppends
