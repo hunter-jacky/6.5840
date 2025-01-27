@@ -13,6 +13,7 @@ runs=$1
 chmod +x test-mr.sh
 
 for i in $(seq 1 $runs); do
+    echo "Running trial $i"
     timeout -k 2s 900s ./test-mr.sh &
     pid=$!
     if ! wait $pid; then
