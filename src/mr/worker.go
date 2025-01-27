@@ -14,7 +14,7 @@ import (
 	"time"
 )
 
-const INTERMEDIATE_DIR = "/home/jiaqiwu/go/src/6.5840/src/main/intermediate/"
+const INTERMEDIATE_DIR = "intermediate/"
 
 type NONE struct{}
 type ByKey []KeyValue
@@ -116,7 +116,7 @@ func doReduce(reducef func(string, []string) string, response *TaskResponse) {
 
 	sort.Sort(ByKey(intermediate))
 
-	tmpFile, err := os.CreateTemp("", "mr-tmp-*")
+	tmpFile, err := os.CreateTemp(INTERMEDIATE_DIR, "mr-tmp-*")
 	defer os.Remove(tmpFile.Name())
 	if err != nil {
 		log.Fatalf("create tmp file failed: %v", err)
@@ -152,7 +152,7 @@ func storeIntermediate(intermediate []KeyValue, filename string) {
 		os.Remove(filename)
 	}
 
-	tmpFile, err := os.CreateTemp("", "mr-tmp-*")
+	tmpFile, err := os.CreateTemp(INTERMEDIATE_DIR, "mr-tmp-*")
 	defer os.Remove(tmpFile.Name())
 	if err != nil {
 		log.Fatalf("create tmp file failed: %v", err)
