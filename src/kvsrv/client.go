@@ -78,7 +78,6 @@ func (ck *Clerk) PutAppend(key string, value string, op string) string {
 			return reply.Value
 		}
 	}
-	// panic(fmt.Sprintf("PutAppend(%s) failed, key(%s), value(%s)", op, key, value))
 }
 
 func (ck *Clerk) Put(key string, value string) {

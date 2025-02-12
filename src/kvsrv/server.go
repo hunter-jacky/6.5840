@@ -40,11 +40,6 @@ func (kv *KVServer) Put(args *PutAppendArgs, reply *PutAppendReply) {
 	kv.mu.Lock()
 	defer kv.mu.Unlock()
 
-	if args.ActionID == kv.buffer[args.ClientID].actionID {
-		reply.Value = kv.buffer[args.ClientID].oldValue
-		return
-	}
-
 	kv.db[args.Key] = args.Value
 }
 
