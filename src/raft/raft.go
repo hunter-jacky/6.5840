@@ -102,9 +102,9 @@ func (rf *Raft) GetState() (int, bool) {
 	var isleader bool
 	// Your code here (3A).
 	rf.mu.Lock()
+	defer rf.mu.Unlock()
 	term = rf.currentTerm
 	isleader = rf.state == Leader
-	rf.mu.Unlock()
 	return term, isleader
 }
 
@@ -235,21 +235,21 @@ type AppendEntriesReply struct {
 	Success bool
 }
 
-func (rf *Raft) AppendEntries(args *AppendEntriesArgs, reply *AppendEntriesReply) {
+// AppendEntries 前置检查
+func (rf *Raft) checkAppendEntries(args *AppendEntriesArgs, reply *AppendEntriesReply) bool {
 	rf.mu.Lock()
+	defer rf.mu.Unlock()
 	if args.LeaderId < 0 || args.LeaderId >= len(rf.peers) {
 		reply.Term = rf.currentTerm
 		reply.Success = false
 		log.Default().Printf("server: %d, invalid leader id: %d", rf.me, args.LeaderId)
-		rf.mu.Unlock()
-		return
+		return false
 	}
 	if args.Term < rf.currentTerm {
 		reply.Term = rf.currentTerm
 		reply.Success = false
 		log.Default().Printf("server: %d, receive heartbeat from old leader: %d, my term: %d, leader term: %d, my state: %d", rf.me, args.LeaderId, rf.currentTerm, args.Term, rf.state)
-		rf.mu.Unlock()
-		return
+		return false
 	}
 
 	if args.Term > rf.currentTerm {
@@ -267,7 +267,13 @@ func (rf *Raft) AppendEntries(args *AppendEntriesArgs, reply *AppendEntriesReply
 	// reset the election timer
 	rf.updateElectionTimer()
 	reply.Term = rf.currentTerm
-	rf.mu.Unlock()
+	return true
+}
+
+func (rf *Raft) AppendEntries(args *AppendEntriesArgs, reply *AppendEntriesReply) {
+	if !rf.checkAppendEntries(args, reply) {
+		return
+	}
 	// TODO: check if the log is consistent
 
 	// TODO: append the entries to the log
@@ -413,9 +419,9 @@ func (rf *Raft) doFollower() {
 	rf.updateElectionTimer()
 	<-rf.electionTimer.C
 	if rf.getState() == Follower {
-		rf.mu.Lock()
-		rf.state = Candidate
-		rf.mu.Unlock()
+		rf.actionWithLock(func() {
+			rf.state = Candidate
+		})
 	}
 }
 
@@ -432,12 +438,13 @@ func (rf *Raft) ticker() {
 		case Candidate:
 			rf.doCandidate()
 		}
-
-		// pause for a random amount of time between 50 and 350
-		// milliseconds.
-		// ms := 50 + (rand.Int63() % 300)
-		// time.Sleep(time.Duration(ms) * time.Millisecond)
 	}
+}
+
+func (rf *Raft) actionWithLock(f func()) {
+	rf.mu.Lock()
+	defer rf.mu.Unlock()
+	f()
 }
 
 type ElectionResult int
@@ -450,49 +457,56 @@ const (
 
 func (rf *Raft) doCandidate() {
 	for rf.getState() == Candidate {
-		rf.mu.Lock()
-		rf.currentTerm++
-		log.Default().Printf("server: %d, Election timeout, start the election, new term: %d", rf.me, rf.currentTerm)
-		rf.stopElectCh = make(chan struct{}, 1)
-		rf.mu.Unlock()
+		rf.election()
+	}
+}
 
-		eleResCh := make(chan ElectionResult, 1)
-		rf.electionOnce(eleResCh)
+// the election process, determine the final state of the server, if state is
+// - Leader, the server has won the election
+// - Follower, the server has lost the election
+// - Candidate, the server has not received enough votes, timeout
+// election may be stopped when meet a new leader or a bigger term
+func (rf *Raft) election() {
+	// create the channel only at the beginning of the election to avoid a situation
+	// where the channel repeatedly sends signals for multiple reasons before receiving the signal, causing it to block
+	// multiple reasons: receive the vote with a bigger term, receive the heartbeat from new leader
+	rf.stopElectCh = make(chan struct{}, 1)
+	defer rf.actionWithLock(func() {
+		rf.stopElectCh = nil
+	})
 
-		select {
-		case result := <-eleResCh:
-			switch result {
-			case Win:
-				log.Default().Printf("server: %d, Election won", rf.me)
-				rf.mu.Lock()
+	electResCh := make(chan ElectionResult, 1)
+	go rf.electionOnce(electResCh)
+
+	select {
+	case result := <-electResCh:
+		switch result {
+		case Win:
+			log.Default().Printf("server: %d, Election won", rf.me)
+			rf.actionWithLock(func() {
 				rf.state = Leader
 				rf.leaderId = rf.me
-				rf.mu.Unlock()
-				return
-			case Lose:
-				log.Default().Printf("server: %d, Election lost", rf.me)
-				rf.mu.Lock()
+			})
+		case Lose:
+			log.Default().Printf("server: %d, Election lost", rf.me)
+			rf.actionWithLock(func() {
 				rf.state = Follower
-				rf.mu.Unlock()
-				return
-			case TimeOut:
-				// restart the election
-				log.Default().Printf("server: %d, vote timeout, restart the election", rf.me)
-			}
-		case <-rf.stopElectCh:
-			// another server has won the election
-			rf.mu.Lock()
-			rf.state = Follower
-			rf.stopElectCh = nil
-			rf.mu.Unlock()
-			return
+			})
+		case TimeOut:
+			// stay in the candidate state, restart the election
+			log.Default().Printf("server: %d, vote timeout, restart the election", rf.me)
 		}
+	case <-rf.stopElectCh:
+		// another server has won the election, state has been changed
+		log.Default().Printf("server: %d, stop election", rf.me)
 	}
 }
 
 // wait for the votes
 func (rf *Raft) electionOnce(resCh chan ElectionResult) {
 	rf.mu.Lock()
+	rf.currentTerm++
+	log.Default().Printf("server: %d, Election timeout, start the election, new term: %d", rf.me, rf.currentTerm)
 	rf.votedFor = rf.me
 
 	args := &RequestVoteArgs{
@@ -502,6 +516,7 @@ func (rf *Raft) electionOnce(resCh chan ElectionResult) {
 		LastLogTerm:  rf.log[len(rf.log)-1].Term,
 	}
 	rf.mu.Unlock()
+
 	voteCh := make(chan bool, len(rf.peers))
 	for i := range rf.peers {
 		if i == rf.me {
