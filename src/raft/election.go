@@ -240,7 +240,7 @@ func (rf *Raft) electionOnce(resCh chan<- ElectionResult, cancelCh <-chan struct
 	logPrintf("server: %d, Wait for the votes, term: %d", rf.me, rf.getTerm())
 	votes := 0
 	count := 0
-	for {
+	for !rf.killed() {
 		select {
 		case <-time.After(getVoteGrantTimeoutDuration()):
 			resCh <- TimeOut
