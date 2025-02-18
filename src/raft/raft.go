@@ -314,7 +314,7 @@ func (rf *Raft) doLeader() {
 	go rf.updateCommitIndex()
 
 	// send log entries
-	for rf.getState() == Leader {
+	for !rf.killed() && rf.getState() == Leader {
 		for i := range rf.peers {
 			if i == rf.me {
 				continue
@@ -397,7 +397,7 @@ func (rf *Raft) sendAppendEntriesToOne(i int, args *AppendEntriesArgs) {
 	defer rf.mu.Unlock()
 
 	// state and term may be changed by other reply when receive the current reply
-	if rf.state == Leader && rf.CurrentTerm == args.Term {
+	if !rf.killed() && rf.state == Leader && rf.CurrentTerm == args.Term {
 		if len(args.Entries) > 0 {
 			logPrintf("server: %d, receive reply from server: %d, term: %d, reply.success: %v, reply.term: %d, state: %d", rf.me, i, rf.CurrentTerm, reply.Success, reply.Term, rf.state)
 		} else {
@@ -444,7 +444,7 @@ func (rf *Raft) sendAppendEntriesToOne(i int, args *AppendEntriesArgs) {
 }
 
 func (rf *Raft) sendHeartbeat() {
-	for rf.getState() == Leader {
+	for !rf.killed() && rf.getState() == Leader {
 		rf.mu.RLock()
 		logPrintf("server: %d, send heartbeat, term: %d, nextIndex: %+v, matchIndex: %+v, lastIncludedIdx: %d, logs length: %d, commit index: %d", rf.me, rf.CurrentTerm, rf.nextIndex, rf.matchIndex, rf.LastIncludedIdx, len(rf.Logs), rf.commitIndex)
 		rf.mu.RUnlock()
@@ -463,7 +463,7 @@ func (rf *Raft) sendHeartbeat() {
 }
 
 func (rf *Raft) updateCommitIndex() {
-	for {
+	for !rf.killed() {
 		rf.mu.Lock()
 		if rf.state != Leader {
 			rf.mu.Unlock()
@@ -509,6 +509,11 @@ func (rf *Raft) doFollower() {
 
 	rf.mu.Lock()
 	defer rf.mu.Unlock()
+
+	if rf.killed() {
+		return
+	}
+
 	// check if the election timer is reset during the waiting,
 	// otherwise there may be election behavior in the presence of a leader
 	if rf.electionTimer.Stop() {
@@ -527,8 +532,8 @@ func (rf *Raft) doFollower() {
 }
 
 func (rf *Raft) doCandidate() {
-	logPrintf("server: %d, do candidate, term: %d", rf.me, rf.getCurrentTerm())
-	for rf.getState() == Candidate {
+	logPrintf("server: %d, do candidate, term: %d", rf.me, rf.getTerm())
+	for !rf.killed() && rf.getState() == Candidate {
 		rf.election()
 	}
 }
@@ -557,7 +562,7 @@ func (rf *Raft) isUpdatedCommitIndex() bool {
 }
 
 func (rf *Raft) applyEntryProcess() {
-	for {
+	for !rf.killed() {
 		rf.applyMu.Lock()
 		for !rf.isUpdatedCommitIndex() {
 			rf.applyCond.Wait()

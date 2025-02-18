@@ -856,11 +856,14 @@ func TestFigure83C(t *testing.T) {
 	cfg.begin("Test (3C): Figure 8")
 
 	testPrintf("distribute one command\n")
-	cfg.one(rand.Int(), 1, true)
+	cmd := rand.Int()
+	testPrintf("Event: distribute one command %d\n", cmd)
+	cfg.one(cmd, 1, true)
 
 	nup := servers
 	for iters := 0; iters < 1000; iters++ {
 		leader := -1
+		testPrintf("Event: distributed commands for finding an activate leader, cnt: %d(999)\n", iters)
 		for i := 0; i < servers; i++ {
 			if cfg.rafts[i] != nil {
 				_, _, ok := cfg.rafts[i].Start(rand.Int())
@@ -880,34 +883,36 @@ func TestFigure83C(t *testing.T) {
 		}
 
 		if leader != -1 {
-			testPrintf("prepare to crash %d", leader)
+			testPrintf("Event: prepare to crash %v\n", leader)
 			cfg.crash1(leader)
-			testPrintf("crash %d", leader)
+			testPrintf("Event: crash %v\n", leader)
 			nup -= 1
 		}
 
 		if nup < 3 {
 			s := rand.Int() % servers
 			if cfg.rafts[s] == nil {
-				testPrintf("prepare to connect %d", s)
+				testPrintf("Event: prepare to connect %v\n", s)
 				cfg.start1(s, cfg.applier)
 				cfg.connect(s)
-				testPrintf("connect %d", s)
+				testPrintf("Event: connect %v\n", s)
 				nup += 1
 			}
 		}
 	}
 
-	testPrintf("prepare to connect all servers")
+	testPrintf("Event: prepare to connect all servers\n")
 	for i := 0; i < servers; i++ {
 		if cfg.rafts[i] == nil {
 			cfg.start1(i, cfg.applier)
 			cfg.connect(i)
 		}
 	}
-	testPrintf("connect all servers")
+	testPrintf("Event: connect all servers\n")
 
-	cfg.one(rand.Int(), servers, true)
+	cmd = rand.Int()
+	testPrintf("Event: distribute one command %d\n", cmd)
+	cfg.one(cmd, servers, true)
 
 	cfg.end()
 }
