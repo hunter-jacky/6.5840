@@ -855,6 +855,7 @@ func TestFigure83C(t *testing.T) {
 
 	cfg.begin("Test (3C): Figure 8")
 
+	testPrintf("distribute one command\n")
 	cfg.one(rand.Int(), 1, true)
 
 	nup := servers
@@ -864,6 +865,7 @@ func TestFigure83C(t *testing.T) {
 			if cfg.rafts[i] != nil {
 				_, _, ok := cfg.rafts[i].Start(rand.Int())
 				if ok {
+					testPrintf("leader %v start a command\n", i)
 					leader = i
 				}
 			}
@@ -878,26 +880,32 @@ func TestFigure83C(t *testing.T) {
 		}
 
 		if leader != -1 {
+			testPrintf("prepare to crash %d", leader)
 			cfg.crash1(leader)
+			testPrintf("crash %d", leader)
 			nup -= 1
 		}
 
 		if nup < 3 {
 			s := rand.Int() % servers
 			if cfg.rafts[s] == nil {
+				testPrintf("prepare to connect %d", s)
 				cfg.start1(s, cfg.applier)
 				cfg.connect(s)
+				testPrintf("connect %d", s)
 				nup += 1
 			}
 		}
 	}
 
+	testPrintf("prepare to connect all servers")
 	for i := 0; i < servers; i++ {
 		if cfg.rafts[i] == nil {
 			cfg.start1(i, cfg.applier)
 			cfg.connect(i)
 		}
 	}
+	testPrintf("connect all servers")
 
 	cfg.one(rand.Int(), servers, true)
 

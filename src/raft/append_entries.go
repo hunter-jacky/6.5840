@@ -42,6 +42,9 @@ func (rf *Raft) checkAppendEntries(args *AppendEntriesArgs, reply *AppendEntries
 		rf.VotedFor = -1
 		rf.persist()
 		rf.leaderId = args.LeaderId
+		// if rf.state == Candidate && rf.stopElectCh != nil {
+		// 	rf.stopElectCh <- struct{}{}
+		// }
 		rf.state = Follower
 	}
 	if args.Term == rf.CurrentTerm {
@@ -63,34 +66,34 @@ func (rf *Raft) AppendEntries(args *AppendEntriesArgs, reply *AppendEntriesReply
 	rf.mu.Lock()
 	defer rf.mu.Unlock()
 	if len(args.Entries) > 0 {
-		logPrintf("server: %d, receive entries from leader: %d, term: %d, len(entries): %d, PrevLogIndex: %d, len(log): %d, leaderCommit: %d", rf.me, args.LeaderId, args.Term, len(args.Entries), args.PrevLogIndex, len(rf.Logs), args.LeaderCommit)
+		logPrintf("server: %d, receive entries from leader: %d, term: %d, len(entries): %d, PrevLogIndex: %d, lastIncludedIdx: %d, len(log): %d, leaderCommit: %d", rf.me, args.LeaderId, args.Term, len(args.Entries), args.PrevLogIndex, rf.LastIncludedIdx, len(rf.Logs), args.LeaderCommit)
 	} else {
 		logPrintf("server: %d, receive heartbeat from leader: %d, term: %d, leaderCommit: %d", rf.me, args.LeaderId, args.Term, args.LeaderCommit)
 	}
 	// check if the log is consistent
 	// if current log doesn't have the prevLogIndex, return false
-	if args.PrevLogIndex >= len(rf.Logs) {
+	if args.PrevLogIndex >= rf.getIndexAfterLock(len(rf.Logs)) {
 		reply.Success = false
-		reply.XLen = len(rf.Logs)
+		reply.XLen = rf.getIndexAfterLock(len(rf.Logs))
 		reply.XTerm = -1
 		reply.XIndex = -1
-		logPrintf("server: %d, prevLogIndex >= my log len, my log len: %d, prevLogIndex: %d", rf.me, len(rf.Logs), args.PrevLogIndex)
+		logPrintf("server: %d, prevLogIndex >= my log len, my log fake len: %d, prevLogIndex: %d", rf.me, rf.getIndexAfterLock(len(rf.Logs)), args.PrevLogIndex)
 		return
 	}
 	// if there is a conflict at the prevLogIndex position, return false
-	if rf.Logs[args.PrevLogIndex].Term != args.PrevLogTerm {
+	if rf.getTermByIndexAfterLock(args.PrevLogIndex) != args.PrevLogTerm {
 		reply.Success = false
-		reply.XLen = len(rf.Logs)
+		reply.XLen = rf.getIndexAfterLock(len(rf.Logs))
 		reply.XTerm = rf.Logs[args.PrevLogIndex].Term
 		reply.XIndex = 1
 		for i := args.PrevLogIndex; i >= 0; i-- {
-			if rf.Logs[i].Term != reply.XTerm {
+			if rf.getTermByIndexAfterLock(i) != reply.XTerm {
 				reply.XIndex = i + 1
 				break
 			}
 		}
 
-		logPrintf("server: %d, log is inconsistent, my log term at PrevLogIndex: %d, args.prevLogTerm: %d", rf.me, rf.Logs[args.PrevLogIndex].Term, args.PrevLogTerm)
+		logPrintf("server: %d, log is inconsistent, my log term at PrevLogIndex: %d, args.prevLogTerm: %d", rf.me, rf.getTermByIndexAfterLock(args.PrevLogIndex), args.PrevLogTerm)
 		return
 	}
 
@@ -98,17 +101,17 @@ func (rf *Raft) AppendEntries(args *AppendEntriesArgs, reply *AppendEntriesReply
 	// append the entries to the log
 	for i := 0; i < len(args.Entries); i++ {
 		// if the log doesn't have current entry, append the rest of the entries
-		if args.PrevLogIndex+i+1 == len(rf.Logs) {
+		if args.PrevLogIndex+i+1 == rf.getIndexAfterLock(len(rf.Logs)) {
 			rf.Logs = append(rf.Logs, args.Entries[i:]...)
 			rf.persist()
 			change = true
 			break
-		} else if args.PrevLogIndex+i+1 > len(rf.Logs) {
+		} else if args.PrevLogIndex+i+1 > rf.getIndexAfterLock(len(rf.Logs)) {
 			panic("log is inconsistent")
 		}
 		// if there is a conflict, truncate the log and append the rest of the entries
-		if rf.Logs[args.PrevLogIndex+i+1].Term != args.Entries[i].Term {
-			rf.Logs = rf.Logs[:args.PrevLogIndex+i+1]
+		if rf.getTermByIndexAfterLock(args.PrevLogIndex+i+1) != args.Entries[i].Term {
+			rf.Logs = rf.Logs[:rf.getRealIndexAfterLock(args.PrevLogIndex+i+1)]
 			rf.Logs = append(rf.Logs, args.Entries[i:]...)
 			rf.persist()
 			change = true
@@ -132,12 +135,12 @@ func (rf *Raft) AppendEntries(args *AppendEntriesArgs, reply *AppendEntriesReply
 	reply.Success = true
 	if len(args.Entries) > 0 {
 		if change {
-			logPrintf("server: %d, append entries from leader: %d, log changed. term: %d, PrevLogIndex: %d, len(entries): %d, len(log): %d, commitIndex: %d, success", rf.me, args.LeaderId, args.Term, args.PrevLogIndex, len(args.Entries), len(rf.Logs), rf.commitIndex)
+			logPrintf("server: %d, append entries from leader: %d, log changed. term: %d, PrevLogIndex: %d, len(entries): %d, lastIncludedIdx: %d, len(log): %d, commitIndex: %d, success", rf.me, args.LeaderId, args.Term, args.PrevLogIndex, len(args.Entries), rf.LastIncludedIdx, len(rf.Logs), rf.commitIndex)
 		} else {
-			logPrintf("server: %d, append entries from leader: %d, term: %d, PrevLogIndex: %d, len(entries): %d, len(log): %d, commitIndex: %d, success", rf.me, args.LeaderId, args.Term, args.PrevLogIndex, len(args.Entries), len(rf.Logs), rf.commitIndex)
+			logPrintf("server: %d, append entries from leader: %d, term: %d, PrevLogIndex: %d, len(entries): %d, lastIncludedIdx: %d, len(log): %d, commitIndex: %d, success", rf.me, args.LeaderId, args.Term, args.PrevLogIndex, len(args.Entries), rf.LastIncludedIdx, len(rf.Logs), rf.commitIndex)
 		}
 	} else {
-		logPrintf("server: %d, finished heartbeat from leader: %d, term: %d, PrevLogIndex: %d, len(log): %d, commitIndex: %d, success", rf.me, args.LeaderId, args.Term, args.PrevLogIndex, len(rf.Logs), rf.commitIndex)
+		logPrintf("server: %d, finished heartbeat from leader: %d, term: %d, PrevLogIndex: %d, lastIncludedIdx: %d, len(log): %d, commitIndex: %d, success", rf.me, args.LeaderId, args.Term, args.PrevLogIndex, rf.LastIncludedIdx, len(rf.Logs), rf.commitIndex)
 	}
 }
 

@@ -69,3 +69,5 @@ func initLogSetting() {
 		log.SetOutput(ioutil.Discard)
 	}
 }
+
+const MAX_LOG_SIZE = 1000

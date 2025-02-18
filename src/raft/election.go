@@ -96,7 +96,7 @@ func (rf *Raft) shouldVote(args *RequestVoteArgs) (bool, string) {
 
 	if rf.VotedFor == -1 || rf.VotedFor == args.CandidateId {
 		// the candidate's log is at least as up-to-date as receiver's log
-		if rf.Logs[len(rf.Logs)-1].Term < args.LastLogTerm || (rf.Logs[len(rf.Logs)-1].Term == args.LastLogTerm && len(rf.Logs)-1 <= args.LastLogIndex) {
+		if rf.Logs[len(rf.Logs)-1].Term < args.LastLogTerm || (rf.Logs[len(rf.Logs)-1].Term == args.LastLogTerm && rf.getIndexAfterLock(len(rf.Logs)-1) <= args.LastLogIndex) {
 			return true, ""
 		}
 		return false, "candidate's log is not up-to-date"
@@ -215,7 +215,7 @@ func (rf *Raft) electionOnce(resCh chan<- ElectionResult, cancelCh <-chan struct
 	args := &RequestVoteArgs{
 		Term:         rf.CurrentTerm,
 		CandidateId:  rf.me,
-		LastLogIndex: len(rf.Logs) - 1,
+		LastLogIndex: rf.getIndexAfterLock(len(rf.Logs) - 1),
 		LastLogTerm:  rf.Logs[len(rf.Logs)-1].Term,
 	}
 	rf.mu.RUnlock()
@@ -237,7 +237,7 @@ func (rf *Raft) electionOnce(resCh chan<- ElectionResult, cancelCh <-chan struct
 	}
 
 	// check if the candidate has won the election
-	logPrintf("server: %d, Wait for the votes, term: %d", rf.me, rf.getTerm())
+	logPrintf("server: %d, Wait for the votes, term: %d", rf.me, rf.getCurrentTerm())
 	votes := 0
 	count := 0
 	for {
