@@ -1195,16 +1195,21 @@ func snapcommon(t *testing.T, name string, disconnect bool, reliable bool, crash
 		}
 
 		if disconnect {
+			testPrintf("Event: prepare to disconnect %v\n", victim)
 			cfg.disconnect(victim)
+			testPrintf("Event: disconnect %v\n", victim)
 			cfg.one(rand.Int(), servers-1, true)
 		}
 		if crash {
+			testPrintf("Event: prepare to crash %v\n", victim)
 			cfg.crash1(victim)
+			testPrintf("Event: crash %v\n", victim)
 			cfg.one(rand.Int(), servers-1, true)
 		}
 
 		// perhaps send enough to get a snapshot
 		nn := (SnapShotInterval / 2) + (rand.Int() % SnapShotInterval)
+		testPrintf("Event: distribute %v commands for server %d\n", nn, sender)
 		for i := 0; i < nn; i++ {
 			cfg.rafts[sender].Start(rand.Int())
 		}
@@ -1225,13 +1230,17 @@ func snapcommon(t *testing.T, name string, disconnect bool, reliable bool, crash
 		if disconnect {
 			// reconnect a follower, who maybe behind and
 			// needs to rceive a snapshot to catch up.
+			testPrintf("Event: prepare to connect %v\n", victim)
 			cfg.connect(victim)
+			testPrintf("Event: connect %v\n", victim)
 			cfg.one(rand.Int(), servers, true)
 			leader1 = cfg.checkOneLeader()
 		}
 		if crash {
+			testPrintf("Event: prepare to start %v\n", victim)
 			cfg.start1(victim, cfg.applierSnap)
 			cfg.connect(victim)
+			testPrintf("Event: start %v\n", victim)
 			cfg.one(rand.Int(), servers, true)
 			leader1 = cfg.checkOneLeader()
 		}

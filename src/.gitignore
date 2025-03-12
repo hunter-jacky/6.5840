@@ -10,6 +10,3 @@ mrtmp.*
 /main/mrcoordinator
 /main/mrsequential
 /main/mrworker
-
-Test*
-2025*

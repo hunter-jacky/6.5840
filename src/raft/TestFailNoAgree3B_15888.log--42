@@ -1,0 +1,436 @@
+2025/02/17 02:07:23.643592 server: 0, do follower, term: 0
+2025/02/17 02:07:23.644019 [31mapplier: prepare to read from applyCh, i:0, addr: 0xc0001a0000
+[0m
+2025/02/17 02:07:23.644247 server: 1, do follower, term: 0
+2025/02/17 02:07:23.644252 [31mapplier: prepare to read from applyCh, i:1, addr: 0xc0000dc008
+[0m
+2025/02/17 02:07:23.644412 [31mapplier: prepare to read from applyCh, i:2, addr: 0xc0001a0008
+[0m
+2025/02/17 02:07:23.644453 server: 2, do follower, term: 0
+2025/02/17 02:07:23.644649 server: 3, do follower, term: 0
+2025/02/17 02:07:23.644859 server: 4, do follower, term: 0
+2025/02/17 02:07:23.644705 [31mapplier: prepare to read from applyCh, i:3, addr: 0xc00030a000
+[0m
+2025/02/17 02:07:23.644834 [31mapplier: prepare to read from applyCh, i:4, addr: 0xc0001a0010
+[0m
+Test (3B): no agreement if too many followers disconnect ...
+2025/02/17 02:07:24.254013 server: 0, election time ring, term: 0
+2025/02/17 02:07:24.254114 server: 0, do candidate, term: 0
+2025/02/17 02:07:24.255084 server: 0, start the election, new term: 1
+2025/02/17 02:07:24.255304 server: 0, Wait for the votes, term: 1
+2025/02/17 02:07:24.255353 server: 0, Vote received, votes: 1, count: 1
+2025/02/17 02:07:24.255409 server: 0, send vote request to server: 3, term: 1
+2025/02/17 02:07:24.255703 server: 0, send vote request to server: 1, term: 1
+2025/02/17 02:07:24.255854 server: 0, send vote request to server: 2, term: 1
+2025/02/17 02:07:24.255989 server: 0, send vote request to server: 4, term: 1
+2025/02/17 02:07:24.256967 server: 3, receive vote request from server: 0, args.term: 1, args.LastLogIndex: 0, args.LastLogTerm: -1
+2025/02/17 02:07:24.257257 server: 3, vote for server: 0, args.term: 1, args.LastLogIndex: 0, args.LastLogTerm: -1
+2025/02/17 02:07:24.257887 server: 4, receive vote request from server: 0, args.term: 1, args.LastLogIndex: 0, args.LastLogTerm: -1
+2025/02/17 02:07:24.258097 server: 4, vote for server: 0, args.term: 1, args.LastLogIndex: 0, args.LastLogTerm: -1
+2025/02/17 02:07:24.258439 server: 0, receive vote from server: 3, reply: &{Term:1 VoteGranted:true}
+2025/02/17 02:07:24.258500 server: 0, Vote received, votes: 2, count: 2
+2025/02/17 02:07:24.258961 server: 1, receive vote request from server: 0, args.term: 1, args.LastLogIndex: 0, args.LastLogTerm: -1
+2025/02/17 02:07:24.259218 server: 1, vote for server: 0, args.term: 1, args.LastLogIndex: 0, args.LastLogTerm: -1
+2025/02/17 02:07:24.259641 server: 0, receive vote from server: 1, reply: &{Term:1 VoteGranted:true}
+2025/02/17 02:07:24.259690 server: 0, Vote received, votes: 3, count: 3
+2025/02/17 02:07:24.259734 server: 0, Election won
+2025/02/17 02:07:24.259766 server: 0, do leader, term: 1
+2025/02/17 02:07:24.259869 server: 0, send heartbeat, term: 1, nextIndex: [1 1 1 1 1], matchIndex: [0 0 0 0 0], logs length: 1, commit index: 0
+2025/02/17 02:07:24.259986 server: 0, send heartbeat to server: 4, term: 1, nextIndex: 1, commit index: 0
+2025/02/17 02:07:24.260612 server: 0, send heartbeat to server: 1, term: 1, nextIndex: 1, commit index: 0
+2025/02/17 02:07:24.260713 server: 2, election time ring, term: 0
+2025/02/17 02:07:24.260820 server: 2, do candidate, term: 0
+2025/02/17 02:07:24.260779 server: 0, send heartbeat to server: 3, term: 1, nextIndex: 1, commit index: 0
+2025/02/17 02:07:24.261196 server: 2, receive vote request from server: 0, args.term: 1, args.LastLogIndex: 0, args.LastLogTerm: -1
+2025/02/17 02:07:24.261222 server: 0, send heartbeat to server: 2, term: 1, nextIndex: 1, commit index: 0
+2025/02/17 02:07:24.261330 server: 0, receive vote from server: 4, reply: &{Term:1 VoteGranted:true}
+2025/02/17 02:07:24.261639 server: 2, vote for server: 0, args.term: 1, args.LastLogIndex: 0, args.LastLogTerm: -1
+2025/02/17 02:07:24.261869 server: 1, receive heartbeat from leader: 0, term: 1, leaderCommit: 0
+2025/02/17 02:07:24.261929 server: 1, finished heartbeat from leader: 0, term: 1, PrevLogIndex: 0, len(log): 1, commitIndex: 0, success
+2025/02/17 02:07:24.262222 server: 3, receive heartbeat from leader: 0, term: 1, leaderCommit: 0
+2025/02/17 02:07:24.262287 server: 2, receive heartbeat from leader: 0, term: 1, leaderCommit: 0
+2025/02/17 02:07:24.262347 server: 2, finished heartbeat from leader: 0, term: 1, PrevLogIndex: 0, len(log): 1, commitIndex: 0, success
+2025/02/17 02:07:24.262288 server: 3, finished heartbeat from leader: 0, term: 1, PrevLogIndex: 0, len(log): 1, commitIndex: 0, success
+2025/02/17 02:07:24.262581 server: 4, receive heartbeat from leader: 0, term: 1, leaderCommit: 0
+2025/02/17 02:07:24.262649 server: 4, finished heartbeat from leader: 0, term: 1, PrevLogIndex: 0, len(log): 1, commitIndex: 0, success
+2025/02/17 02:07:24.262780 server: 0, receive heartbeat reply from server: 1, term: 1, reply.success: true, reply.term: 1, state: 2
+2025/02/17 02:07:24.262848 server: 2, stop election
+2025/02/17 02:07:24.262890 server: 2, do follower, term: 1
+2025/02/17 02:07:24.262891 server: 0, receive heartbeat reply from server: 3, term: 1, reply.success: true, reply.term: 1, state: 2
+2025/02/17 02:07:24.262804 server: 0, receive vote from server: 2, reply: &{Term:1 VoteGranted:true}
+2025/02/17 02:07:24.263103 server: 2, start the election, new term: 2
+2025/02/17 02:07:24.263254 server: 2, Wait for the votes, term: 2
+2025/02/17 02:07:24.263280 server: 2, Vote received, votes: 1, count: 1
+2025/02/17 02:07:24.263273 server: 2, send vote request to server: 0, term: 2
+2025/02/17 02:07:24.263312 server: 2, send vote request to server: 3, term: 2
+2025/02/17 02:07:24.263344 server: 0, receive heartbeat reply from server: 4, term: 1, reply.success: true, reply.term: 1, state: 2
+2025/02/17 02:07:24.263419 server: 2, send vote request to server: 4, term: 2
+2025/02/17 02:07:24.263436 server: 2, send vote request to server: 1, term: 2
+2025/02/17 02:07:24.263445 server: 0, receive heartbeat reply from server: 2, term: 1, reply.success: true, reply.term: 1, state: 2
+2025/02/17 02:07:24.264182 server: 3, receive vote request from server: 2, args.term: 2, args.LastLogIndex: 0, args.LastLogTerm: -1
+2025/02/17 02:07:24.264449 server: 1, receive vote request from server: 2, args.term: 2, args.LastLogIndex: 0, args.LastLogTerm: -1
+2025/02/17 02:07:24.264469 server: 4, receive vote request from server: 2, args.term: 2, args.LastLogIndex: 0, args.LastLogTerm: -1
+2025/02/17 02:07:24.264595 server: 0, receive vote request from server: 2, args.term: 2, args.LastLogIndex: 0, args.LastLogTerm: -1
+2025/02/17 02:07:24.264606 server: 3, vote for server: 2, args.term: 2, args.LastLogIndex: 0, args.LastLogTerm: -1
+2025/02/17 02:07:24.264669 server: 0, reject vote for server: 2, I'm leader
+2025/02/17 02:07:24.264904 server: 1, vote for server: 2, args.term: 2, args.LastLogIndex: 0, args.LastLogTerm: -1
+2025/02/17 02:07:24.264927 server: 4, vote for server: 2, args.term: 2, args.LastLogIndex: 0, args.LastLogTerm: -1
+2025/02/17 02:07:24.265175 server: 2, receive vote from server: 3, reply: &{Term:2 VoteGranted:true}
+2025/02/17 02:07:24.265206 server: 2, receive vote from server: 0, reply: &{Term:1 VoteGranted:false}
+2025/02/17 02:07:24.265231 server: 2, Vote received, votes: 2, count: 2
+2025/02/17 02:07:24.265323 server: 2, Vote received, votes: 2, count: 3
+2025/02/17 02:07:24.265456 server: 2, receive vote from server: 1, reply: &{Term:2 VoteGranted:true}
+2025/02/17 02:07:24.265476 server: 2, receive vote from server: 4, reply: &{Term:2 VoteGranted:true}
+2025/02/17 02:07:24.265516 server: 2, Vote received, votes: 3, count: 4
+2025/02/17 02:07:24.300721 server: 0, #--------------# receive a command, 10, append to logs, term: 1, len(logs): 2
+2025/02/17 02:07:24.300950 server: 0, send entries to server: 1, term: 1, len(entries): 1, nextIndex: 1, commit index: 0
+2025/02/17 02:07:24.301098 server: 0, send entries to server: 3, term: 1, len(entries): 1, nextIndex: 1, commit index: 0
+2025/02/17 02:07:24.301243 server: 0, send entries to server: 2, term: 1, len(entries): 1, nextIndex: 1, commit index: 0
+2025/02/17 02:07:24.301459 server: 0, send entries to server: 4, term: 1, len(entries): 1, nextIndex: 1, commit index: 0
+2025/02/17 02:07:24.302158 server: 1, receive entry or heartbeat from old leader: 0, my term: 2, leader term: 1, my state: 0
+2025/02/17 02:07:24.302371 server: 3, receive entry or heartbeat from old leader: 0, my term: 2, leader term: 1, my state: 0
+2025/02/17 02:07:24.302424 server: 2, receive entry or heartbeat from old leader: 0, my term: 2, leader term: 1, my state: 0
+2025/02/17 02:07:24.302738 server: 0, receive reply from server: 1, term: 1, reply.success: false, reply.term: 2, state: 2
+2025/02/17 02:07:24.302759 server: 4, receive entry or heartbeat from old leader: 0, my term: 2, leader term: 1, my state: 0
+2025/02/17 02:07:24.302975 server: 0, receive reply from server: 1, term: 2, reply.term: 2, become follower
+2025/02/17 02:07:24.303038 server: 0, receive reply from server: 2, term: 2, reply.success: false, reply.term: 2, state: 0
+2025/02/17 02:07:24.303049 server: 0, receive reply from server: 3, term: 2, reply.success: false, reply.term: 2, state: 0
+2025/02/17 02:07:24.303359 server: 0, receive reply from server: 4, term: 2, reply.success: false, reply.term: 2, state: 0
+2025/02/17 02:07:24.311187 server: 0, do follower, term: 2
+2025/02/17 02:07:24.919989 server: 1, election time ring, term: 2
+2025/02/17 02:07:24.920081 server: 1, do candidate, term: 2
+2025/02/17 02:07:24.920414 server: 1, start the election, new term: 3
+2025/02/17 02:07:24.920656 server: 1, Wait for the votes, term: 3
+2025/02/17 02:07:24.920701 server: 1, Vote received, votes: 1, count: 1
+2025/02/17 02:07:24.920727 server: 1, send vote request to server: 0, term: 3
+2025/02/17 02:07:24.920772 server: 1, send vote request to server: 4, term: 3
+2025/02/17 02:07:24.920793 server: 1, send vote request to server: 2, term: 3
+2025/02/17 02:07:24.920789 server: 1, send vote request to server: 3, term: 3
+2025/02/17 02:07:24.921677 server: 2, receive vote request from server: 1, args.term: 3, args.LastLogIndex: 0, args.LastLogTerm: -1
+2025/02/17 02:07:24.921707 server: 0, receive vote request from server: 1, args.term: 3, args.LastLogIndex: 0, args.LastLogTerm: -1
+2025/02/17 02:07:24.921679 server: 4, receive vote request from server: 1, args.term: 3, args.LastLogIndex: 0, args.LastLogTerm: -1
+2025/02/17 02:07:24.921893 server: 3, receive vote request from server: 1, args.term: 3, args.LastLogIndex: 0, args.LastLogTerm: -1
+2025/02/17 02:07:24.921968 server: 0, reject vote for server: 1, candidate's log is not up-to-date , args.term: 3, args.LastLogIndex: 0, args.LastLogTerm: -1
+2025/02/17 02:07:24.922051 server: 2, vote for server: 1, args.term: 3, args.LastLogIndex: 0, args.LastLogTerm: -1
+2025/02/17 02:07:24.922107 server: 4, vote for server: 1, args.term: 3, args.LastLogIndex: 0, args.LastLogTerm: -1
+2025/02/17 02:07:24.922316 server: 3, vote for server: 1, args.term: 3, args.LastLogIndex: 0, args.LastLogTerm: -1
+2025/02/17 02:07:24.922501 server: 1, receive vote from server: 0, reply: &{Term:3 VoteGranted:false}
+2025/02/17 02:07:24.922542 server: 1, receive vote from server: 2, reply: &{Term:3 VoteGranted:true}
+2025/02/17 02:07:24.922570 server: 1, Vote received, votes: 1, count: 2
+2025/02/17 02:07:24.922573 server: 1, receive vote from server: 4, reply: &{Term:3 VoteGranted:true}
+2025/02/17 02:07:24.922619 server: 1, Vote received, votes: 2, count: 3
+2025/02/17 02:07:24.922656 server: 1, Vote received, votes: 3, count: 4
+2025/02/17 02:07:24.922685 server: 1, Election won
+2025/02/17 02:07:24.922742 server: 1, do leader, term: 3
+2025/02/17 02:07:24.922824 server: 1, send heartbeat, term: 3, nextIndex: [1 1 1 1 1], matchIndex: [0 0 0 0 0], logs length: 1, commit index: 0
+2025/02/17 02:07:24.922880 server: 1, receive vote from server: 3, reply: &{Term:3 VoteGranted:true}
+2025/02/17 02:07:24.922982 server: 1, send heartbeat to server: 0, term: 3, nextIndex: 1, commit index: 0
+2025/02/17 02:07:24.923066 server: 1, send heartbeat to server: 4, term: 3, nextIndex: 1, commit index: 0
+2025/02/17 02:07:24.923367 server: 1, send heartbeat to server: 2, term: 3, nextIndex: 1, commit index: 0
+2025/02/17 02:07:24.923707 server: 1, send heartbeat to server: 3, term: 3, nextIndex: 1, commit index: 0
+2025/02/17 02:07:24.923799 server: 0, receive heartbeat from leader: 1, term: 3, leaderCommit: 0
+2025/02/17 02:07:24.923869 server: 0, finished heartbeat from leader: 1, term: 3, PrevLogIndex: 0, len(log): 2, commitIndex: 0, success
+2025/02/17 02:07:24.924290 server: 1, receive heartbeat reply from server: 0, term: 3, reply.success: true, reply.term: 3, state: 2
+2025/02/17 02:07:24.924894 server: 2, receive heartbeat from leader: 1, term: 3, leaderCommit: 0
+2025/02/17 02:07:24.924932 server: 2, finished heartbeat from leader: 1, term: 3, PrevLogIndex: 0, len(log): 1, commitIndex: 0, success
+2025/02/17 02:07:24.925164 server: 3, receive heartbeat from leader: 1, term: 3, leaderCommit: 0
+2025/02/17 02:07:24.925219 server: 3, finished heartbeat from leader: 1, term: 3, PrevLogIndex: 0, len(log): 1, commitIndex: 0, success
+2025/02/17 02:07:24.925420 server: 1, receive heartbeat reply from server: 2, term: 3, reply.success: true, reply.term: 3, state: 2
+2025/02/17 02:07:24.925737 server: 1, receive heartbeat reply from server: 3, term: 3, reply.success: true, reply.term: 3, state: 2
+2025/02/17 02:07:24.925933 server: 4, receive heartbeat from leader: 1, term: 3, leaderCommit: 0
+2025/02/17 02:07:24.925971 server: 4, finished heartbeat from leader: 1, term: 3, PrevLogIndex: 0, len(log): 1, commitIndex: 0, success
+2025/02/17 02:07:24.926542 server: 1, receive heartbeat reply from server: 4, term: 3, reply.success: true, reply.term: 3, state: 2
+2025/02/17 02:07:25.004052 server: 1, send heartbeat, term: 3, nextIndex: [1 1 1 1 1], matchIndex: [0 0 0 0 0], logs length: 1, commit index: 0
+2025/02/17 02:07:25.004278 server: 1, send heartbeat to server: 3, term: 3, nextIndex: 1, commit index: 0
+2025/02/17 02:07:25.004444 server: 1, send heartbeat to server: 0, term: 3, nextIndex: 1, commit index: 0
+2025/02/17 02:07:25.004880 server: 1, send heartbeat to server: 2, term: 3, nextIndex: 1, commit index: 0
+2025/02/17 02:07:25.005109 server: 1, send heartbeat to server: 4, term: 3, nextIndex: 1, commit index: 0
+2025/02/17 02:07:25.005373 server: 3, receive heartbeat from leader: 1, term: 3, leaderCommit: 0
+2025/02/17 02:07:25.005423 server: 3, finished heartbeat from leader: 1, term: 3, PrevLogIndex: 0, len(log): 1, commitIndex: 0, success
+2025/02/17 02:07:25.005815 server: 0, receive heartbeat from leader: 1, term: 3, leaderCommit: 0
+2025/02/17 02:07:25.005867 server: 0, finished heartbeat from leader: 1, term: 3, PrevLogIndex: 0, len(log): 2, commitIndex: 0, success
+2025/02/17 02:07:25.005899 server: 1, receive heartbeat reply from server: 3, term: 3, reply.success: true, reply.term: 3, state: 2
+2025/02/17 02:07:25.005977 server: 2, receive heartbeat from leader: 1, term: 3, leaderCommit: 0
+2025/02/17 02:07:25.006028 server: 2, finished heartbeat from leader: 1, term: 3, PrevLogIndex: 0, len(log): 1, commitIndex: 0, success
+2025/02/17 02:07:25.006420 server: 1, receive heartbeat reply from server: 0, term: 3, reply.success: true, reply.term: 3, state: 2
+2025/02/17 02:07:25.006503 server: 4, receive heartbeat from leader: 1, term: 3, leaderCommit: 0
+2025/02/17 02:07:25.006517 server: 1, receive heartbeat reply from server: 2, term: 3, reply.success: true, reply.term: 3, state: 2
+2025/02/17 02:07:25.006540 server: 4, finished heartbeat from leader: 1, term: 3, PrevLogIndex: 0, len(log): 1, commitIndex: 0, success
+2025/02/17 02:07:25.006983 server: 1, receive heartbeat reply from server: 4, term: 3, reply.success: true, reply.term: 3, state: 2
+2025/02/17 02:07:25.085185 server: 1, send heartbeat, term: 3, nextIndex: [1 1 1 1 1], matchIndex: [0 0 0 0 0], logs length: 1, commit index: 0
+2025/02/17 02:07:25.085426 server: 1, send heartbeat to server: 4, term: 3, nextIndex: 1, commit index: 0
+2025/02/17 02:07:25.085786 server: 1, send heartbeat to server: 0, term: 3, nextIndex: 1, commit index: 0
+2025/02/17 02:07:25.085998 server: 1, send heartbeat to server: 3, term: 3, nextIndex: 1, commit index: 0
+2025/02/17 02:07:25.086258 server: 1, send heartbeat to server: 2, term: 3, nextIndex: 1, commit index: 0
+2025/02/17 02:07:25.087188 server: 4, receive heartbeat from leader: 1, term: 3, leaderCommit: 0
+2025/02/17 02:07:25.087250 server: 4, finished heartbeat from leader: 1, term: 3, PrevLogIndex: 0, len(log): 1, commitIndex: 0, success
+2025/02/17 02:07:25.087993 server: 0, receive heartbeat from leader: 1, term: 3, leaderCommit: 0
+2025/02/17 02:07:25.088033 server: 0, finished heartbeat from leader: 1, term: 3, PrevLogIndex: 0, len(log): 2, commitIndex: 0, success
+2025/02/17 02:07:25.088485 server: 1, receive heartbeat reply from server: 4, term: 3, reply.success: true, reply.term: 3, state: 2
+2025/02/17 02:07:25.089054 server: 3, receive heartbeat from leader: 1, term: 3, leaderCommit: 0
+2025/02/17 02:07:25.089088 server: 3, finished heartbeat from leader: 1, term: 3, PrevLogIndex: 0, len(log): 1, commitIndex: 0, success
+2025/02/17 02:07:25.089702 server: 2, receive heartbeat from leader: 1, term: 3, leaderCommit: 0
+2025/02/17 02:07:25.089735 server: 2, finished heartbeat from leader: 1, term: 3, PrevLogIndex: 0, len(log): 1, commitIndex: 0, success
+2025/02/17 02:07:25.090163 server: 1, receive heartbeat reply from server: 0, term: 3, reply.success: true, reply.term: 3, state: 2
+2025/02/17 02:07:25.090480 server: 1, receive heartbeat reply from server: 2, term: 3, reply.success: true, reply.term: 3, state: 2
+2025/02/17 02:07:25.090673 server: 1, receive heartbeat reply from server: 3, term: 3, reply.success: true, reply.term: 3, state: 2
+2025/02/17 02:07:25.165902 server: 1, send heartbeat, term: 3, nextIndex: [1 1 1 1 1], matchIndex: [0 0 0 0 0], logs length: 1, commit index: 0
+2025/02/17 02:07:25.166037 server: 1, send heartbeat to server: 0, term: 3, nextIndex: 1, commit index: 0
+2025/02/17 02:07:25.166294 server: 1, send heartbeat to server: 2, term: 3, nextIndex: 1, commit index: 0
+2025/02/17 02:07:25.166428 server: 1, send heartbeat to server: 3, term: 3, nextIndex: 1, commit index: 0
+2025/02/17 02:07:25.166591 server: 1, send heartbeat to server: 4, term: 3, nextIndex: 1, commit index: 0
+2025/02/17 02:07:25.167235 server: 4, receive heartbeat from leader: 1, term: 3, leaderCommit: 0
+2025/02/17 02:07:25.167265 server: 4, finished heartbeat from leader: 1, term: 3, PrevLogIndex: 0, len(log): 1, commitIndex: 0, success
+2025/02/17 02:07:25.167740 server: 0, receive heartbeat from leader: 1, term: 3, leaderCommit: 0
+2025/02/17 02:07:25.167765 server: 0, finished heartbeat from leader: 1, term: 3, PrevLogIndex: 0, len(log): 2, commitIndex: 0, success
+2025/02/17 02:07:25.168406 server: 2, receive heartbeat from leader: 1, term: 3, leaderCommit: 0
+2025/02/17 02:07:25.168446 server: 2, finished heartbeat from leader: 1, term: 3, PrevLogIndex: 0, len(log): 1, commitIndex: 0, success
+2025/02/17 02:07:25.169044 server: 1, receive heartbeat reply from server: 2, term: 3, reply.success: true, reply.term: 3, state: 2
+2025/02/17 02:07:25.169056 server: 1, receive heartbeat reply from server: 4, term: 3, reply.success: true, reply.term: 3, state: 2
+2025/02/17 02:07:25.169196 server: 1, receive heartbeat reply from server: 0, term: 3, reply.success: true, reply.term: 3, state: 2
+2025/02/17 02:07:25.169229 server: 3, receive heartbeat from leader: 1, term: 3, leaderCommit: 0
+2025/02/17 02:07:25.169323 server: 3, finished heartbeat from leader: 1, term: 3, PrevLogIndex: 0, len(log): 1, commitIndex: 0, success
+2025/02/17 02:07:25.169871 server: 1, receive heartbeat reply from server: 3, term: 3, reply.success: true, reply.term: 3, state: 2
+2025/02/17 02:07:25.246778 server: 1, send heartbeat, term: 3, nextIndex: [1 1 1 1 1], matchIndex: [0 0 0 0 0], logs length: 1, commit index: 0
+2025/02/17 02:07:25.246988 server: 1, send heartbeat to server: 2, term: 3, nextIndex: 1, commit index: 0
+2025/02/17 02:07:25.247135 server: 1, send heartbeat to server: 0, term: 3, nextIndex: 1, commit index: 0
+2025/02/17 02:07:25.247253 server: 1, send heartbeat to server: 3, term: 3, nextIndex: 1, commit index: 0
+2025/02/17 02:07:25.247414 server: 1, send heartbeat to server: 4, term: 3, nextIndex: 1, commit index: 0
+2025/02/17 02:07:25.248119 server: 2, receive heartbeat from leader: 1, term: 3, leaderCommit: 0
+2025/02/17 02:07:25.248164 server: 2, finished heartbeat from leader: 1, term: 3, PrevLogIndex: 0, len(log): 1, commitIndex: 0, success
+2025/02/17 02:07:25.248206 server: 4, receive heartbeat from leader: 1, term: 3, leaderCommit: 0
+2025/02/17 02:07:25.248220 server: 3, receive heartbeat from leader: 1, term: 3, leaderCommit: 0
+2025/02/17 02:07:25.248215 server: 0, receive heartbeat from leader: 1, term: 3, leaderCommit: 0
+2025/02/17 02:07:25.248269 server: 3, finished heartbeat from leader: 1, term: 3, PrevLogIndex: 0, len(log): 1, commitIndex: 0, success
+2025/02/17 02:07:25.248297 server: 0, finished heartbeat from leader: 1, term: 3, PrevLogIndex: 0, len(log): 2, commitIndex: 0, success
+2025/02/17 02:07:25.248254 server: 4, finished heartbeat from leader: 1, term: 3, PrevLogIndex: 0, len(log): 1, commitIndex: 0, success
+2025/02/17 02:07:25.248754 server: 1, receive heartbeat reply from server: 3, term: 3, reply.success: true, reply.term: 3, state: 2
+2025/02/17 02:07:25.248843 server: 1, receive heartbeat reply from server: 2, term: 3, reply.success: true, reply.term: 3, state: 2
+2025/02/17 02:07:25.248937 server: 1, receive heartbeat reply from server: 0, term: 3, reply.success: true, reply.term: 3, state: 2
+2025/02/17 02:07:25.249107 server: 1, receive heartbeat reply from server: 4, term: 3, reply.success: true, reply.term: 3, state: 2
+2025/02/17 02:07:25.327394 server: 1, send heartbeat, term: 3, nextIndex: [1 1 1 1 1], matchIndex: [0 0 0 0 0], logs length: 1, commit index: 0
+2025/02/17 02:07:25.327554 server: 1, send heartbeat to server: 3, term: 3, nextIndex: 1, commit index: 0
+2025/02/17 02:07:25.327840 server: 1, send heartbeat to server: 2, term: 3, nextIndex: 1, commit index: 0
+2025/02/17 02:07:25.327975 server: 1, send heartbeat to server: 0, term: 3, nextIndex: 1, commit index: 0
+2025/02/17 02:07:25.328108 server: 1, send heartbeat to server: 4, term: 3, nextIndex: 1, commit index: 0
+2025/02/17 02:07:25.329036 server: 2, receive heartbeat from leader: 1, term: 3, leaderCommit: 0
+2025/02/17 02:07:25.329083 server: 2, finished heartbeat from leader: 1, term: 3, PrevLogIndex: 0, len(log): 1, commitIndex: 0, success
+2025/02/17 02:07:25.329823 server: 0, receive heartbeat from leader: 1, term: 3, leaderCommit: 0
+2025/02/17 02:07:25.329870 server: 0, finished heartbeat from leader: 1, term: 3, PrevLogIndex: 0, len(log): 2, commitIndex: 0, success
+2025/02/17 02:07:25.330506 server: 3, receive heartbeat from leader: 1, term: 3, leaderCommit: 0
+2025/02/17 02:07:25.330542 server: 3, finished heartbeat from leader: 1, term: 3, PrevLogIndex: 0, len(log): 1, commitIndex: 0, success
+2025/02/17 02:07:25.330983 server: 1, receive heartbeat reply from server: 0, term: 3, reply.success: true, reply.term: 3, state: 2
+2025/02/17 02:07:25.331493 server: 4, receive heartbeat from leader: 1, term: 3, leaderCommit: 0
+2025/02/17 02:07:25.331529 server: 4, finished heartbeat from leader: 1, term: 3, PrevLogIndex: 0, len(log): 1, commitIndex: 0, success
+2025/02/17 02:07:25.331906 server: 1, receive heartbeat reply from server: 3, term: 3, reply.success: true, reply.term: 3, state: 2
+2025/02/17 02:07:25.332127 server: 1, receive heartbeat reply from server: 2, term: 3, reply.success: true, reply.term: 3, state: 2
+2025/02/17 02:07:25.332378 server: 1, receive heartbeat reply from server: 4, term: 3, reply.success: true, reply.term: 3, state: 2
+2025/02/17 02:07:25.410481 server: 1, send heartbeat, term: 3, nextIndex: [1 1 1 1 1], matchIndex: [0 0 0 0 0], logs length: 1, commit index: 0
+2025/02/17 02:07:25.410671 server: 1, send heartbeat to server: 2, term: 3, nextIndex: 1, commit index: 0
+2025/02/17 02:07:25.410834 server: 1, send heartbeat to server: 3, term: 3, nextIndex: 1, commit index: 0
+2025/02/17 02:07:25.410936 server: 1, send heartbeat to server: 0, term: 3, nextIndex: 1, commit index: 0
+2025/02/17 02:07:25.411097 server: 1, send heartbeat to server: 4, term: 3, nextIndex: 1, commit index: 0
+2025/02/17 02:07:25.411723 server: 3, receive heartbeat from leader: 1, term: 3, leaderCommit: 0
+2025/02/17 02:07:25.411723 server: 2, receive heartbeat from leader: 1, term: 3, leaderCommit: 0
+2025/02/17 02:07:25.411818 server: 2, finished heartbeat from leader: 1, term: 3, PrevLogIndex: 0, len(log): 1, commitIndex: 0, success
+2025/02/17 02:07:25.411770 server: 3, finished heartbeat from leader: 1, term: 3, PrevLogIndex: 0, len(log): 1, commitIndex: 0, success
+2025/02/17 02:07:25.412002 server: 4, receive heartbeat from leader: 1, term: 3, leaderCommit: 0
+2025/02/17 02:07:25.412022 server: 0, receive heartbeat from leader: 1, term: 3, leaderCommit: 0
+2025/02/17 02:07:25.412053 server: 4, finished heartbeat from leader: 1, term: 3, PrevLogIndex: 0, len(log): 1, commitIndex: 0, success
+2025/02/17 02:07:25.412082 server: 0, finished heartbeat from leader: 1, term: 3, PrevLogIndex: 0, len(log): 2, commitIndex: 0, success
+2025/02/17 02:07:25.412196 server: 1, receive heartbeat reply from server: 3, term: 3, reply.success: true, reply.term: 3, state: 2
+2025/02/17 02:07:25.412383 server: 1, receive heartbeat reply from server: 2, term: 3, reply.success: true, reply.term: 3, state: 2
+2025/02/17 02:07:25.412516 server: 1, receive heartbeat reply from server: 4, term: 3, reply.success: true, reply.term: 3, state: 2
+2025/02/17 02:07:25.412666 server: 1, receive heartbeat reply from server: 0, term: 3, reply.success: true, reply.term: 3, state: 2
+2025/02/17 02:07:25.490722 server: 1, send heartbeat, term: 3, nextIndex: [1 1 1 1 1], matchIndex: [0 0 0 0 0], logs length: 1, commit index: 0
+2025/02/17 02:07:25.490884 server: 1, send heartbeat to server: 4, term: 3, nextIndex: 1, commit index: 0
+2025/02/17 02:07:25.490961 server: 1, send heartbeat to server: 2, term: 3, nextIndex: 1, commit index: 0
+2025/02/17 02:07:25.491057 server: 1, send heartbeat to server: 0, term: 3, nextIndex: 1, commit index: 0
+2025/02/17 02:07:25.491221 server: 1, send heartbeat to server: 3, term: 3, nextIndex: 1, commit index: 0
+2025/02/17 02:07:25.491583 server: 4, receive heartbeat from leader: 1, term: 3, leaderCommit: 0
+2025/02/17 02:07:25.491621 server: 4, finished heartbeat from leader: 1, term: 3, PrevLogIndex: 0, len(log): 1, commitIndex: 0, success
+2025/02/17 02:07:25.491929 server: 2, receive heartbeat from leader: 1, term: 3, leaderCommit: 0
+2025/02/17 02:07:25.491956 server: 0, receive heartbeat from leader: 1, term: 3, leaderCommit: 0
+2025/02/17 02:07:25.491981 server: 2, finished heartbeat from leader: 1, term: 3, PrevLogIndex: 0, len(log): 1, commitIndex: 0, success
+2025/02/17 02:07:25.492006 server: 0, finished heartbeat from leader: 1, term: 3, PrevLogIndex: 0, len(log): 2, commitIndex: 0, success
+2025/02/17 02:07:25.492013 server: 3, receive heartbeat from leader: 1, term: 3, leaderCommit: 0
+2025/02/17 02:07:25.491944 server: 1, receive heartbeat reply from server: 4, term: 3, reply.success: true, reply.term: 3, state: 2
+2025/02/17 02:07:25.492063 server: 3, finished heartbeat from leader: 1, term: 3, PrevLogIndex: 0, len(log): 1, commitIndex: 0, success
+2025/02/17 02:07:25.492453 server: 1, receive heartbeat reply from server: 2, term: 3, reply.success: true, reply.term: 3, state: 2
+2025/02/17 02:07:25.492471 server: 1, receive heartbeat reply from server: 0, term: 3, reply.success: true, reply.term: 3, state: 2
+2025/02/17 02:07:25.492599 server: 1, receive heartbeat reply from server: 3, term: 3, reply.success: true, reply.term: 3, state: 2
+2025/02/17 02:07:25.571243 server: 1, send heartbeat, term: 3, nextIndex: [1 1 1 1 1], matchIndex: [0 0 0 0 0], logs length: 1, commit index: 0
+2025/02/17 02:07:25.571429 server: 1, send heartbeat to server: 4, term: 3, nextIndex: 1, commit index: 0
+2025/02/17 02:07:25.571819 server: 1, send heartbeat to server: 0, term: 3, nextIndex: 1, commit index: 0
+2025/02/17 02:07:25.572041 server: 1, send heartbeat to server: 2, term: 3, nextIndex: 1, commit index: 0
+2025/02/17 02:07:25.572265 server: 1, send heartbeat to server: 3, term: 3, nextIndex: 1, commit index: 0
+2025/02/17 02:07:25.573074 server: 2, receive heartbeat from leader: 1, term: 3, leaderCommit: 0
+2025/02/17 02:07:25.573109 server: 2, finished heartbeat from leader: 1, term: 3, PrevLogIndex: 0, len(log): 1, commitIndex: 0, success
+2025/02/17 02:07:25.573346 server: 3, receive heartbeat from leader: 1, term: 3, leaderCommit: 0
+2025/02/17 02:07:25.573382 server: 0, receive heartbeat from leader: 1, term: 3, leaderCommit: 0
+2025/02/17 02:07:25.573398 server: 3, finished heartbeat from leader: 1, term: 3, PrevLogIndex: 0, len(log): 1, commitIndex: 0, success
+2025/02/17 02:07:25.573434 server: 1, receive heartbeat reply from server: 2, term: 3, reply.success: true, reply.term: 3, state: 2
+2025/02/17 02:07:25.573432 server: 0, finished heartbeat from leader: 1, term: 3, PrevLogIndex: 0, len(log): 2, commitIndex: 0, success
+2025/02/17 02:07:25.573910 server: 1, receive heartbeat reply from server: 3, term: 3, reply.success: true, reply.term: 3, state: 2
+2025/02/17 02:07:25.573913 server: 1, receive heartbeat reply from server: 0, term: 3, reply.success: true, reply.term: 3, state: 2
+2025/02/17 02:07:25.574040 server: 4, receive heartbeat from leader: 1, term: 3, leaderCommit: 0
+2025/02/17 02:07:25.574081 server: 4, finished heartbeat from leader: 1, term: 3, PrevLogIndex: 0, len(log): 1, commitIndex: 0, success
+2025/02/17 02:07:25.574591 server: 1, receive heartbeat reply from server: 4, term: 3, reply.success: true, reply.term: 3, state: 2
+2025/02/17 02:07:25.651949 server: 1, send heartbeat, term: 3, nextIndex: [1 1 1 1 1], matchIndex: [0 0 0 0 0], logs length: 1, commit index: 0
+2025/02/17 02:07:25.652090 server: 1, send heartbeat to server: 2, term: 3, nextIndex: 1, commit index: 0
+2025/02/17 02:07:25.652218 server: 1, send heartbeat to server: 0, term: 3, nextIndex: 1, commit index: 0
+2025/02/17 02:07:25.652301 server: 1, send heartbeat to server: 3, term: 3, nextIndex: 1, commit index: 0
+2025/02/17 02:07:25.652433 server: 1, send heartbeat to server: 4, term: 3, nextIndex: 1, commit index: 0
+2025/02/17 02:07:25.652900 server: 2, receive heartbeat from leader: 1, term: 3, leaderCommit: 0
+2025/02/17 02:07:25.652928 server: 2, finished heartbeat from leader: 1, term: 3, PrevLogIndex: 0, len(log): 1, commitIndex: 0, success
+2025/02/17 02:07:25.653168 server: 3, receive heartbeat from leader: 1, term: 3, leaderCommit: 0
+2025/02/17 02:07:25.653192 server: 0, receive heartbeat from leader: 1, term: 3, leaderCommit: 0
+2025/02/17 02:07:25.653231 server: 1, receive heartbeat reply from server: 2, term: 3, reply.success: true, reply.term: 3, state: 2
+2025/02/17 02:07:25.653225 server: 3, finished heartbeat from leader: 1, term: 3, PrevLogIndex: 0, len(log): 1, commitIndex: 0, success
+2025/02/17 02:07:25.653243 server: 0, finished heartbeat from leader: 1, term: 3, PrevLogIndex: 0, len(log): 2, commitIndex: 0, success
+2025/02/17 02:07:25.653353 server: 4, receive heartbeat from leader: 1, term: 3, leaderCommit: 0
+2025/02/17 02:07:25.653406 server: 4, finished heartbeat from leader: 1, term: 3, PrevLogIndex: 0, len(log): 1, commitIndex: 0, success
+2025/02/17 02:07:25.653694 server: 1, receive heartbeat reply from server: 3, term: 3, reply.success: true, reply.term: 3, state: 2
+2025/02/17 02:07:25.653694 server: 1, receive heartbeat reply from server: 0, term: 3, reply.success: true, reply.term: 3, state: 2
+2025/02/17 02:07:25.653853 server: 1, receive heartbeat reply from server: 4, term: 3, reply.success: true, reply.term: 3, state: 2
+2025/02/17 02:07:25.732904 server: 1, send heartbeat, term: 3, nextIndex: [1 1 1 1 1], matchIndex: [0 0 0 0 0], logs length: 1, commit index: 0
+2025/02/17 02:07:25.733094 server: 1, send heartbeat to server: 4, term: 3, nextIndex: 1, commit index: 0
+2025/02/17 02:07:25.733438 server: 1, send heartbeat to server: 0, term: 3, nextIndex: 1, commit index: 0
+2025/02/17 02:07:25.733653 server: 1, send heartbeat to server: 2, term: 3, nextIndex: 1, commit index: 0
+2025/02/17 02:07:25.733853 server: 1, send heartbeat to server: 3, term: 3, nextIndex: 1, commit index: 0
+2025/02/17 02:07:25.734826 server: 3, receive heartbeat from leader: 1, term: 3, leaderCommit: 0
+2025/02/17 02:07:25.734874 server: 3, finished heartbeat from leader: 1, term: 3, PrevLogIndex: 0, len(log): 1, commitIndex: 0, success
+2025/02/17 02:07:25.735671 server: 0, receive heartbeat from leader: 1, term: 3, leaderCommit: 0
+2025/02/17 02:07:25.735722 server: 0, finished heartbeat from leader: 1, term: 3, PrevLogIndex: 0, len(log): 2, commitIndex: 0, success
+2025/02/17 02:07:25.736195 server: 1, receive heartbeat reply from server: 0, term: 3, reply.success: true, reply.term: 3, state: 2
+2025/02/17 02:07:25.737126 server: 4, receive heartbeat from leader: 1, term: 3, leaderCommit: 0
+2025/02/17 02:07:25.737174 server: 4, finished heartbeat from leader: 1, term: 3, PrevLogIndex: 0, len(log): 1, commitIndex: 0, success
+2025/02/17 02:07:25.737269 server: 2, receive heartbeat from leader: 1, term: 3, leaderCommit: 0
+2025/02/17 02:07:25.737323 server: 2, finished heartbeat from leader: 1, term: 3, PrevLogIndex: 0, len(log): 1, commitIndex: 0, success
+2025/02/17 02:07:25.737633 server: 1, receive heartbeat reply from server: 4, term: 3, reply.success: true, reply.term: 3, state: 2
+2025/02/17 02:07:25.737777 server: 1, receive heartbeat reply from server: 2, term: 3, reply.success: true, reply.term: 3, state: 2
+2025/02/17 02:07:25.739259 server: 1, receive heartbeat reply from server: 3, term: 3, reply.success: true, reply.term: 3, state: 2
+2025/02/17 02:07:25.813115 server: 1, send heartbeat, term: 3, nextIndex: [1 1 1 1 1], matchIndex: [0 0 0 0 0], logs length: 1, commit index: 0
+2025/02/17 02:07:25.813332 server: 1, send heartbeat to server: 4, term: 3, nextIndex: 1, commit index: 0
+2025/02/17 02:07:25.813440 server: 1, send heartbeat to server: 0, term: 3, nextIndex: 1, commit index: 0
+2025/02/17 02:07:25.813618 server: 1, send heartbeat to server: 3, term: 3, nextIndex: 1, commit index: 0
+2025/02/17 02:07:25.813759 server: 1, send heartbeat to server: 2, term: 3, nextIndex: 1, commit index: 0
+2025/02/17 02:07:25.814599 server: 4, receive heartbeat from leader: 1, term: 3, leaderCommit: 0
+2025/02/17 02:07:25.814644 server: 4, finished heartbeat from leader: 1, term: 3, PrevLogIndex: 0, len(log): 1, commitIndex: 0, success
+2025/02/17 02:07:25.815103 server: 1, receive heartbeat reply from server: 4, term: 3, reply.success: true, reply.term: 3, state: 2
+2025/02/17 02:07:25.817046 server: 3, receive heartbeat from leader: 1, term: 3, leaderCommit: 0
+2025/02/17 02:07:25.817112 server: 3, finished heartbeat from leader: 1, term: 3, PrevLogIndex: 0, len(log): 1, commitIndex: 0, success
+2025/02/17 02:07:25.817166 server: 2, receive heartbeat from leader: 1, term: 3, leaderCommit: 0
+2025/02/17 02:07:25.817055 server: 0, receive heartbeat from leader: 1, term: 3, leaderCommit: 0
+2025/02/17 02:07:25.817222 server: 2, finished heartbeat from leader: 1, term: 3, PrevLogIndex: 0, len(log): 1, commitIndex: 0, success
+2025/02/17 02:07:25.817259 server: 0, finished heartbeat from leader: 1, term: 3, PrevLogIndex: 0, len(log): 2, commitIndex: 0, success
+2025/02/17 02:07:25.817614 server: 1, receive heartbeat reply from server: 3, term: 3, reply.success: true, reply.term: 3, state: 2
+2025/02/17 02:07:25.817786 server: 1, receive heartbeat reply from server: 2, term: 3, reply.success: true, reply.term: 3, state: 2
+2025/02/17 02:07:25.817855 server: 1, receive heartbeat reply from server: 0, term: 3, reply.success: true, reply.term: 3, state: 2
+2025/02/17 02:07:25.894362 server: 1, send heartbeat, term: 3, nextIndex: [1 1 1 1 1], matchIndex: [0 0 0 0 0], logs length: 1, commit index: 0
+2025/02/17 02:07:25.894567 server: 1, send heartbeat to server: 4, term: 3, nextIndex: 1, commit index: 0
+2025/02/17 02:07:25.894660 server: 1, send heartbeat to server: 2, term: 3, nextIndex: 1, commit index: 0
+2025/02/17 02:07:25.894786 server: 1, send heartbeat to server: 3, term: 3, nextIndex: 1, commit index: 0
+2025/02/17 02:07:25.894881 server: 1, send heartbeat to server: 0, term: 3, nextIndex: 1, commit index: 0
+2025/02/17 02:07:25.895387 server: 4, receive heartbeat from leader: 1, term: 3, leaderCommit: 0
+2025/02/17 02:07:25.895422 server: 4, finished heartbeat from leader: 1, term: 3, PrevLogIndex: 0, len(log): 1, commitIndex: 0, success
+2025/02/17 02:07:25.895741 server: 3, receive heartbeat from leader: 1, term: 3, leaderCommit: 0
+2025/02/17 02:07:25.895805 server: 3, finished heartbeat from leader: 1, term: 3, PrevLogIndex: 0, len(log): 1, commitIndex: 0, success
+2025/02/17 02:07:25.895809 server: 0, receive heartbeat from leader: 1, term: 3, leaderCommit: 0
+2025/02/17 02:07:25.895747 server: 2, receive heartbeat from leader: 1, term: 3, leaderCommit: 0
+2025/02/17 02:07:25.895863 server: 0, finished heartbeat from leader: 1, term: 3, PrevLogIndex: 0, len(log): 2, commitIndex: 0, success
+2025/02/17 02:07:25.895759 server: 1, receive heartbeat reply from server: 4, term: 3, reply.success: true, reply.term: 3, state: 2
+2025/02/17 02:07:25.895893 server: 2, finished heartbeat from leader: 1, term: 3, PrevLogIndex: 0, len(log): 1, commitIndex: 0, success
+2025/02/17 02:07:25.896161 server: 1, receive heartbeat reply from server: 3, term: 3, reply.success: true, reply.term: 3, state: 2
+2025/02/17 02:07:25.896326 server: 1, receive heartbeat reply from server: 0, term: 3, reply.success: true, reply.term: 3, state: 2
+2025/02/17 02:07:25.896414 server: 1, receive heartbeat reply from server: 2, term: 3, reply.success: true, reply.term: 3, state: 2
+2025/02/17 02:07:25.976193 server: 1, send heartbeat, term: 3, nextIndex: [1 1 1 1 1], matchIndex: [0 0 0 0 0], logs length: 1, commit index: 0
+2025/02/17 02:07:25.976365 server: 1, send heartbeat to server: 4, term: 3, nextIndex: 1, commit index: 0
+2025/02/17 02:07:25.976521 server: 1, send heartbeat to server: 0, term: 3, nextIndex: 1, commit index: 0
+2025/02/17 02:07:25.976639 server: 1, send heartbeat to server: 2, term: 3, nextIndex: 1, commit index: 0
+2025/02/17 02:07:25.976889 server: 1, send heartbeat to server: 3, term: 3, nextIndex: 1, commit index: 0
+2025/02/17 02:07:25.977311 server: 4, receive heartbeat from leader: 1, term: 3, leaderCommit: 0
+2025/02/17 02:07:25.977350 server: 4, finished heartbeat from leader: 1, term: 3, PrevLogIndex: 0, len(log): 1, commitIndex: 0, success
+2025/02/17 02:07:25.977445 server: 0, receive heartbeat from leader: 1, term: 3, leaderCommit: 0
+2025/02/17 02:07:25.977482 server: 0, finished heartbeat from leader: 1, term: 3, PrevLogIndex: 0, len(log): 2, commitIndex: 0, success
+2025/02/17 02:07:25.977668 server: 3, receive heartbeat from leader: 1, term: 3, leaderCommit: 0
+2025/02/17 02:07:25.977707 server: 3, finished heartbeat from leader: 1, term: 3, PrevLogIndex: 0, len(log): 1, commitIndex: 0, success
+2025/02/17 02:07:25.977818 server: 1, receive heartbeat reply from server: 4, term: 3, reply.success: true, reply.term: 3, state: 2
+2025/02/17 02:07:25.977912 server: 1, receive heartbeat reply from server: 0, term: 3, reply.success: true, reply.term: 3, state: 2
+2025/02/17 02:07:25.978171 server: 1, receive heartbeat reply from server: 3, term: 3, reply.success: true, reply.term: 3, state: 2
+2025/02/17 02:07:25.978315 server: 2, receive heartbeat from leader: 1, term: 3, leaderCommit: 0
+2025/02/17 02:07:25.978347 server: 2, finished heartbeat from leader: 1, term: 3, PrevLogIndex: 0, len(log): 1, commitIndex: 0, success
+2025/02/17 02:07:25.978741 server: 1, receive heartbeat reply from server: 2, term: 3, reply.success: true, reply.term: 3, state: 2
+2025/02/17 02:07:26.056653 server: 1, send heartbeat, term: 3, nextIndex: [1 1 1 1 1], matchIndex: [0 0 0 0 0], logs length: 1, commit index: 0
+2025/02/17 02:07:26.056872 server: 1, send heartbeat to server: 0, term: 3, nextIndex: 1, commit index: 0
+2025/02/17 02:07:26.058002 server: 0, receive heartbeat from leader: 1, term: 3, leaderCommit: 0
+2025/02/17 02:07:26.058046 server: 0, finished heartbeat from leader: 1, term: 3, PrevLogIndex: 0, len(log): 2, commitIndex: 0, success
+2025/02/17 02:07:26.058184 server: 1, send heartbeat to server: 4, term: 3, nextIndex: 1, commit index: 0
+2025/02/17 02:07:26.058725 server: 1, send heartbeat to server: 3, term: 3, nextIndex: 1, commit index: 0
+2025/02/17 02:07:26.059092 server: 1, send heartbeat to server: 2, term: 3, nextIndex: 1, commit index: 0
+2025/02/17 02:07:26.059329 server: 4, receive heartbeat from leader: 1, term: 3, leaderCommit: 0
+2025/02/17 02:07:26.059370 server: 4, finished heartbeat from leader: 1, term: 3, PrevLogIndex: 0, len(log): 1, commitIndex: 0, success
+2025/02/17 02:07:26.059861 server: 1, receive heartbeat reply from server: 4, term: 3, reply.success: true, reply.term: 3, state: 2
+2025/02/17 02:07:26.059893 server: 3, receive heartbeat from leader: 1, term: 3, leaderCommit: 0
+2025/02/17 02:07:26.059933 server: 3, finished heartbeat from leader: 1, term: 3, PrevLogIndex: 0, len(log): 1, commitIndex: 0, success
+2025/02/17 02:07:26.060069 server: 1, receive heartbeat reply from server: 0, term: 3, reply.success: true, reply.term: 3, state: 2
+2025/02/17 02:07:26.060449 server: 1, receive heartbeat reply from server: 3, term: 3, reply.success: true, reply.term: 3, state: 2
+2025/02/17 02:07:26.060556 server: 2, receive heartbeat from leader: 1, term: 3, leaderCommit: 0
+2025/02/17 02:07:26.060595 server: 2, finished heartbeat from leader: 1, term: 3, PrevLogIndex: 0, len(log): 1, commitIndex: 0, success
+2025/02/17 02:07:26.061074 server: 1, receive heartbeat reply from server: 2, term: 3, reply.success: true, reply.term: 3, state: 2
+2025/02/17 02:07:26.137427 server: 1, send heartbeat, term: 3, nextIndex: [1 1 1 1 1], matchIndex: [0 0 0 0 0], logs length: 1, commit index: 0
+2025/02/17 02:07:26.137639 server: 1, send heartbeat to server: 3, term: 3, nextIndex: 1, commit index: 0
+2025/02/17 02:07:26.137724 server: 1, send heartbeat to server: 0, term: 3, nextIndex: 1, commit index: 0
+2025/02/17 02:07:26.137844 server: 1, send heartbeat to server: 2, term: 3, nextIndex: 1, commit index: 0
+2025/02/17 02:07:26.138008 server: 1, send heartbeat to server: 4, term: 3, nextIndex: 1, commit index: 0
+2025/02/17 02:07:26.138764 server: 0, receive heartbeat from leader: 1, term: 3, leaderCommit: 0
+2025/02/17 02:07:26.138804 server: 0, finished heartbeat from leader: 1, term: 3, PrevLogIndex: 0, len(log): 2, commitIndex: 0, success
+2025/02/17 02:07:26.138820 server: 2, receive heartbeat from leader: 1, term: 3, leaderCommit: 0
+2025/02/17 02:07:26.138884 server: 2, finished heartbeat from leader: 1, term: 3, PrevLogIndex: 0, len(log): 1, commitIndex: 0, success
+2025/02/17 02:07:26.139817 server: 3, receive heartbeat from leader: 1, term: 3, leaderCommit: 0
+2025/02/17 02:07:26.139882 server: 3, finished heartbeat from leader: 1, term: 3, PrevLogIndex: 0, len(log): 1, commitIndex: 0, success
+2025/02/17 02:07:26.141578 server: 1, receive heartbeat reply from server: 3, term: 3, reply.success: true, reply.term: 3, state: 2
+2025/02/17 02:07:26.141656 server: 4, receive heartbeat from leader: 1, term: 3, leaderCommit: 0
+2025/02/17 02:07:26.141668 server: 1, receive heartbeat reply from server: 2, term: 3, reply.success: true, reply.term: 3, state: 2
+2025/02/17 02:07:26.141704 server: 4, finished heartbeat from leader: 1, term: 3, PrevLogIndex: 0, len(log): 1, commitIndex: 0, success
+2025/02/17 02:07:26.141770 server: 1, receive heartbeat reply from server: 0, term: 3, reply.success: true, reply.term: 3, state: 2
+2025/02/17 02:07:26.142182 server: 1, receive heartbeat reply from server: 4, term: 3, reply.success: true, reply.term: 3, state: 2
+2025/02/17 02:07:26.218511 server: 1, send heartbeat, term: 3, nextIndex: [1 1 1 1 1], matchIndex: [0 0 0 0 0], logs length: 1, commit index: 0
+2025/02/17 02:07:26.218755 server: 1, send heartbeat to server: 3, term: 3, nextIndex: 1, commit index: 0
+2025/02/17 02:07:26.218911 server: 1, send heartbeat to server: 2, term: 3, nextIndex: 1, commit index: 0
+2025/02/17 02:07:26.219136 server: 1, send heartbeat to server: 0, term: 3, nextIndex: 1, commit index: 0
+2025/02/17 02:07:26.219305 server: 1, send heartbeat to server: 4, term: 3, nextIndex: 1, commit index: 0
+2025/02/17 02:07:26.219574 server: 3, receive heartbeat from leader: 1, term: 3, leaderCommit: 0
+2025/02/17 02:07:26.219604 server: 3, finished heartbeat from leader: 1, term: 3, PrevLogIndex: 0, len(log): 1, commitIndex: 0, success
+2025/02/17 02:07:26.219886 server: 0, receive heartbeat from leader: 1, term: 3, leaderCommit: 0
+2025/02/17 02:07:26.219916 server: 0, finished heartbeat from leader: 1, term: 3, PrevLogIndex: 0, len(log): 2, commitIndex: 0, success
+2025/02/17 02:07:26.219946 server: 1, receive heartbeat reply from server: 3, term: 3, reply.success: true, reply.term: 3, state: 2
+2025/02/17 02:07:26.220066 server: 2, receive heartbeat from leader: 1, term: 3, leaderCommit: 0
+2025/02/17 02:07:26.220108 server: 2, finished heartbeat from leader: 1, term: 3, PrevLogIndex: 0, len(log): 1, commitIndex: 0, success
+2025/02/17 02:07:26.220191 server: 4, receive heartbeat from leader: 1, term: 3, leaderCommit: 0
+2025/02/17 02:07:26.220237 server: 4, finished heartbeat from leader: 1, term: 3, PrevLogIndex: 0, len(log): 1, commitIndex: 0, success
+2025/02/17 02:07:26.220263 server: 1, receive heartbeat reply from server: 0, term: 3, reply.success: true, reply.term: 3, state: 2
+2025/02/17 02:07:26.220467 server: 1, receive heartbeat reply from server: 2, term: 3, reply.success: true, reply.term: 3, state: 2
+2025/02/17 02:07:26.220760 server: 1, receive heartbeat reply from server: 4, term: 3, reply.success: true, reply.term: 3, state: 2
+2025/02/17 02:07:26.299675 server: 1, send heartbeat, term: 3, nextIndex: [1 1 1 1 1], matchIndex: [0 0 0 0 0], logs length: 1, commit index: 0
+2025/02/17 02:07:26.299883 server: 1, send heartbeat to server: 4, term: 3, nextIndex: 1, commit index: 0
+2025/02/17 02:07:26.299992 server: 1, send heartbeat to server: 2, term: 3, nextIndex: 1, commit index: 0
+2025/02/17 02:07:26.300154 server: 1, send heartbeat to server: 0, term: 3, nextIndex: 1, commit index: 0
+2025/02/17 02:07:26.300342 server: 1, send heartbeat to server: 3, term: 3, nextIndex: 1, commit index: 0
+2025/02/17 02:07:26.301130 server: 4, receive heartbeat from leader: 1, term: 3, leaderCommit: 0
+2025/02/17 02:07:26.301183 server: 0, receive heartbeat from leader: 1, term: 3, leaderCommit: 0
+2025/02/17 02:07:26.301187 server: 4, finished heartbeat from leader: 1, term: 3, PrevLogIndex: 0, len(log): 1, commitIndex: 0, success
+2025/02/17 02:07:26.301226 server: 0, finished heartbeat from leader: 1, term: 3, PrevLogIndex: 0, len(log): 2, commitIndex: 0, success
+2025/02/17 02:07:26.301230 server: 2, receive heartbeat from leader: 1, term: 3, leaderCommit: 0
+2025/02/17 02:07:26.301290 server: 2, finished heartbeat from leader: 1, term: 3, PrevLogIndex: 0, len(log): 1, commitIndex: 0, success
+2025/02/17 02:07:26.301393 server: 3, receive heartbeat from leader: 1, term: 3, leaderCommit: 0
+2025/02/17 02:07:26.301447 server: 3, finished heartbeat from leader: 1, term: 3, PrevLogIndex: 0, len(log): 1, commitIndex: 0, success
+2025/02/17 02:07:26.301639 server: 1, receive heartbeat reply from server: 0, term: 3, reply.success: true, reply.term: 3, state: 2
+--- FAIL: TestFailNoAgree3B (2.66s)
+    config.go:616: one(10) failed to reach agreement
+2025/02/17 02:07:26.301833 server: 1, receive heartbeat reply from server: 4, term: 3, reply.success: true, reply.term: 3, state: 2
+2025/02/17 02:07:26.301832 server: 1, receive heartbeat reply from server: 2, term: 3, reply.success: true, reply.term: 3, state: 2
+2025/02/17 02:07:26.301963 server: 1, receive heartbeat reply from server: 3, term: 3, reply.success: true, reply.term: 3, state: 2
+FAIL
+exit status 1
+FAIL	6.5840/raft	2.689s

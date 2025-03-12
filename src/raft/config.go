@@ -227,7 +227,7 @@ func (cfg *config) applierSnap(i int, applyCh chan ApplyMsg) {
 	if rf == nil {
 		return // ???
 	}
-
+	testPrintf("applier: prepare to read from applyCh, i:%d, addr: %p\n", i, &applyCh)
 	for m := range applyCh {
 		err_msg := ""
 		if m.SnapshotValid {
@@ -566,6 +566,7 @@ func (cfg *config) wait(index int, n int, startTerm int) interface{} {
 func (cfg *config) one(cmd interface{}, expectedServers int, retry bool) int {
 	t0 := time.Now()
 	starts := 0
+	testPrintf("one(%v), expected %d\n", cmd, expectedServers)
 	for time.Since(t0).Seconds() < 10 && cfg.checkFinished() == false {
 		// try all the servers, maybe one is the leader.
 		index := -1
